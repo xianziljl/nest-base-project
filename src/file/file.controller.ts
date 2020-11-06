@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, HttpException, HttpStatus, Param, Post, Query, Req, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Header, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express/multer/interceptors/files.interceptor'
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { BaseQuery, PageResult } from 'src/base/base.dto'
@@ -29,13 +29,15 @@ export class FileController {
   @Header('Content-Type', 'video/mp4,video/mpeg4,video/webm,audio/mpeg,audio/ogg')
   @Get('file/media/:id')
   async downloadMedia(@Res() res, @Param('id') id: string){
-    const stream = await this.fileService.getFileBuffer(id)
+    const file = await this.fileService.findById(id)
+    const stream = await this.fileService.getFileBuffer(file)
     stream.pipe(res)
   }
 
   @Get('file/download/:id')
   async downloadFile(@Res() res, @Param('id') id: string) {
-    const stream = await this.fileService.getFileBuffer(id)
+    const file = await this.fileService.findById(id)
+    const stream = await this.fileService.getFileBuffer(file)
     stream.pipe(res)
   }
 

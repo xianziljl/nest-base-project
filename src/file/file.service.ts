@@ -55,10 +55,9 @@ export class FileService extends BaseService<FileEntity> {
   async getImageBuffer(id: string, w: number | undefined, h: number | undefined): Promise<Readable> {
     const file = await this.findById(id)
     if (!FileService.imageExts.has(file.ext)) {
-      throw new HttpException('File does not exist.', HttpStatus.NOT_FOUND)
+      throw new HttpException('Image does not exist.', HttpStatus.NOT_FOUND)
     }
     const filePath = FileService.getFilePath(file)
-    console.log(filePath)
 
     if (!w && !h) return createReadStream(filePath)
     // console.time('clip')
@@ -71,8 +70,7 @@ export class FileService extends BaseService<FileEntity> {
     return stream
   }
 
-  async getFileBuffer(id: string): Promise<Readable> {
-    const file = await this.findById(id)
+  async getFileBuffer(file: FileEntity): Promise<Readable> {
     const filePath = FileService.getFilePath(file)
     return createReadStream(filePath)
   }
