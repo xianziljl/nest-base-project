@@ -15,7 +15,7 @@ export class FileEntity {
   @Column()
   name: string
 
-  @Column({ select: false })
+  @Column()
   path: string
 
   @Column()
@@ -27,7 +27,10 @@ export class FileEntity {
   @Column()
   ext: string
 
+  @Column({ nullable: true })
+  createrId: number
+  // creater
   @ManyToOne(() => UserEntity)
-  @JoinColumn({ name: 'creater' })
+  @JoinColumn({ name: 'createrId' })
   creater: UserEntity
 }

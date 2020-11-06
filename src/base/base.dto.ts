@@ -17,7 +17,7 @@ export class SortQuery extends BaseQuery {
 export class FilterQuery extends SortQuery {
   @ApiProperty({ required: false, description: 'ID' })
   @IsOptional()
-  id?: number
+  id?: string
 
   @ApiProperty({ required: false, description: '范围筛选'})
   @IsOptional()
@@ -41,7 +41,7 @@ export class PageQuery extends FilterQuery {
 
   @ApiProperty({ required: false, description: '分页大小'})
   @IsOptional()
-  size?: number
+  pageSize?: number
 }
 
 export class BaseCreateOrUpdateDto {
@@ -51,6 +51,6 @@ export class BaseCreateOrUpdateDto {
 export class PageResult<T> {
   total: number
   page: number
-  size: number
+  pageSize: number
   list: T[]
 }

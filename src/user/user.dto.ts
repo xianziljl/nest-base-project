@@ -17,7 +17,7 @@ export class UserQuery extends PageQuery {
 
   @ApiProperty({ required: false, description: '角色ID' })
   @IsOptional()
-  role?: string
+  roleId?: string
 }
 
 export class LoginDto {
@@ -65,7 +65,7 @@ export class UpdateUserDto {
   @ApiProperty({ description: '角色ID', required: false })
   @IsOptional()
   @IsInt()
-  readonly role?: number
+  readonly roleId?: number
 }
 
 export class CreateUserDto {

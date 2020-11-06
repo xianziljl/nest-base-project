@@ -1,4 +1,4 @@
-import { Brackets, DeleteResult, Repository, SelectQueryBuilder } from 'typeorm'
+import { Brackets, DeepPartial, DeleteResult, Repository, SelectQueryBuilder } from 'typeorm'
 import { BaseQuery, FilterQuery, PageQuery, PageResult, SortQuery } from './base.dto'
 
 const DEFAULT_PAGE_SIZE = 30
@@ -22,9 +22,8 @@ export class BaseService<T> {
   getQB(): SelectQueryBuilder<T> {
     return this.repository.createQueryBuilder(this.tableName)
   }
-
+  // 关联表查询 ?joins=role.id,role.name,avatar
   joinQB(qb: SelectQueryBuilder<T>, joins: string): SelectQueryBuilder<T> {
-    // 关联表查询 ?joins=role.id,role.name,avatar
     if (joins) {
       const arr = BaseService.strToArr(joins).map(str => str.split('.'))
       const tbs = new Set(arr.map(item => item[0]))
@@ -104,14 +103,14 @@ export class BaseService<T> {
     }
     return qb
   }
-
-  pageQB(qb: SelectQueryBuilder<T>, page: number, size: number): SelectQueryBuilder<T> {
-    qb.skip((page - 1) * size).take(size)
+  // 分页 ?page=1&pageSize=10
+  pageQB(qb: SelectQueryBuilder<T>, page: number, pageSize: number): SelectQueryBuilder<T> {
+    qb.skip((page - 1) * pageSize).take(pageSize)
     return qb
   }
 
   
-  async findById(id: number, query: BaseQuery): Promise<T> {
+  async findById(id: number | string, query: BaseQuery = {}): Promise<T> {
     const qb = this.getQB()
     this.joinQB(qb, query.joins)
     qb.where(`${this.tableName}.id = :id`, { id })
@@ -144,7 +143,7 @@ export class BaseService<T> {
 
   async filterSortPage(query: PageQuery): Promise<PageResult<T>> {
     const page = ~~query.page || 1
-    const size = ~~query.size || DEFAULT_PAGE_SIZE
+    const pageSize = ~~query.pageSize || DEFAULT_PAGE_SIZE
     
     const qb = this.getQB()
     this.joinQB(qb, query.joins)
@@ -152,16 +151,18 @@ export class BaseService<T> {
     this.rangeQB(qb, query.ranges)
     this.searchQB(qb, query.searchFields, query.search)
     this.sortQB(qb, query.sort)
-    this.pageQB(qb, page, size)
+    this.pageQB(qb, page, pageSize)
     const res = await qb.getManyAndCount()
     const total = res[1]
     const list = res[0]
     // console.timeEnd('query')
-    return { page, size, total, list }
+    return { page, pageSize, total, list }
   }
 
-  async createOrUpdate(data = {}): Promise<T> {
-    const item = await this.repository.preload(data)
+  async createOrUpdate(data: { [key: string]: any }): Promise<T> {
+    let item: T
+    if (data.id) item = await this.repository.preload(data as DeepPartial<T>)
+    else item = this.repository.create(data as DeepPartial<T>)
     await this.repository.save(item)
     return item
   }

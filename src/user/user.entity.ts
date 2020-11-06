@@ -16,7 +16,7 @@ export class UserEntity extends BaseEntiry {
   @Column({ select: false })
   password: string
 
-  @Column()
+  @Column({ nullable: true })
   name: string
 
   @Column({ nullable: true, enum: Gender })
@@ -28,11 +28,17 @@ export class UserEntity extends BaseEntiry {
   @Column({ default: false })
   blocked: boolean
 
-  @OneToOne(() => FileEntity)
-  @JoinColumn({ name: 'avatar' })
+  @Column({ nullable: true })
+  avatarId: string
+
+  @OneToOne(() => FileEntity, { onDelete: 'SET NULL', cascade: true })
+  @JoinColumn({ name: 'avatarId' })
   avatar: FileEntity
 
+  @Column({ nullable: true })
+  roleId: number
+
   @ManyToOne(() => RoleEntity, { onDelete: 'SET NULL', cascade: true })
-  @JoinColumn()
+  @JoinColumn({ name: 'roleId' })
   role: RoleEntity
 }
