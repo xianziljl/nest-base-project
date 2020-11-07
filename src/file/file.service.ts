@@ -1,6 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnsupportedMediaTypeException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
-import { createWriteStream, createReadStream, existsSync, mkdirSync, statSync, ReadStream } from 'fs'
+import { createWriteStream, createReadStream, existsSync, mkdirSync, ReadStream } from 'fs'
 import { join } from 'path'
 import { BaseService } from 'src/base/base.service'
 import { Repository } from 'typeorm'
@@ -15,10 +15,10 @@ export class FileService extends BaseService<FileEntity> {
     this.repository = this.fileRepository
   }
 
-  static imageExts = new Set(['jpg', 'jpeg', 'png', 'webp'])
+  static imageExts = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif', 'tiff'])
 
   static getFilePath(file) {
-    return join(__dirname, '../', file.path, `${file.id}.${file.ext}`)
+    return join(__dirname, '../../', file.path, `${file.id}.${file.ext}`)
   }
 
   async uploadFiles(files: any[], tag: string): Promise<FileEntity[]> {
@@ -40,7 +40,7 @@ export class FileService extends BaseService<FileEntity> {
       }
       const f = await this.createOrUpdate(fileData)
 
-      const dirPath = join(__dirname, '../',  _path)
+      const dirPath = join(__dirname, '../../',  _path)
       if (!existsSync(dirPath)) mkdirSync(dirPath, { recursive: true })
 
       const realPath = join(dirPath, `${f.id}.${fileData.ext}`)
@@ -52,18 +52,16 @@ export class FileService extends BaseService<FileEntity> {
     return res
   }
 
-  async getImage(id: string, w: number | undefined, h: number | undefined): Promise<Readable> {
-    const file = await this.findById(id)
-    if (!FileService.imageExts.has(file.ext)) {
-      throw new HttpException('Image does not exist.', HttpStatus.NOT_FOUND)
-    }
+  async getImage(file: FileEntity, w: number | undefined, h: number | undefined): Promise<Readable> {
+    if (!file) throw new NotFoundException()
+    if (!FileService.imageExts.has(file.ext)) throw new UnsupportedMediaTypeException()
+
     const filePath = FileService.getFilePath(file)
 
     if (!w && !h) return createReadStream(filePath)
-    // console.time('clip')
+
     const img = sharp(filePath)
     const buffer = await img.resize(w, h, { fit: 'cover' }).jpeg().toBuffer()
-    // console.timeEnd('clip')
     const stream = new Readable()
     stream.push(buffer)
     stream.push(null)
@@ -71,10 +69,10 @@ export class FileService extends BaseService<FileEntity> {
   }
 
   async getMedia(file: FileEntity, start: number, end: number): Promise<ReadStream> {
-    const filePath = FileService.getFilePath(file)
     if(start >= file.size) {
       throw new HttpException(`Requested range not satisfiable\n${start} >= ${file.size}`, HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE)
     }
+    const filePath = FileService.getFilePath(file)
     const chunk = createReadStream(filePath, { start, end })
     return chunk
   }

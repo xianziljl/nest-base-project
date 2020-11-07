@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { join } from 'path'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -8,14 +9,14 @@ import { RoleModule } from './role/role.module'
 import { RoleEntity } from './role/role.entiry'
 import { FileModule } from './file/file.module'
 import { FileEntity } from './file/file.entity'
-import { AuthModule } from './auth/auth.module';
+// import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path'
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public')
+      rootPath: join(__dirname, '..', 'public'),
+      exclude: ['/api*']
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',

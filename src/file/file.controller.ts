@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, Headers, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Header, Headers, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express/multer/interceptors/files.interceptor'
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { BaseQuery, PageResult } from 'src/base/base.dto'
@@ -18,12 +18,13 @@ export class FileController {
     return this.fileService.filterSortPage(query)
   }
 
-  @Header('Content-Type', 'image/jpeg,image/png,image/jpg')
+  @Header('Content-Type', 'image/jpeg,image/png,image/jpg,image/gif')
   @Get('file/image/:id')
   async getImage(@Res() res, @Param('id') id: string, @Query() query: ImageQuery) {
+    const file = await this.fileService.findById(id)
     const w = ~~query.w || undefined
     const h = ~~query.h || undefined
-    const stream = await this.fileService.getImage(id, w, h)
+    const stream = await this.fileService.getImage(file, w, h)
     stream.pipe(res)
   }
 
@@ -54,6 +55,8 @@ export class FileController {
   async getFile(@Res() res, @Param('id') id: string) {
     const file = await this.fileService.findById(id)
     const stream = await this.fileService.getFile(file)
+    res.setHeader('content-Type','application/octet-stream');
+    res.setHeader('content-Disposition', `attachment;filename=${file.name}`)
     stream.pipe(res)
   }
 
@@ -71,5 +74,11 @@ export class FileController {
   uploadFiles(@UploadedFiles() files, @Body('tag') tag: string): Promise<FileEntity[]> {
     // console.log('start upload')
     return this.fileService.uploadFiles(files, tag)
+  }
+
+  @Delete('file/:ids')
+  async delete(@Param('ids') ids: string): Promise<string> {
+    await this.fileService.delete(ids)
+    return ids
   }
 }

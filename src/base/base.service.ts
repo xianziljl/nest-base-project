@@ -127,7 +127,7 @@ export class BaseService<T> {
   async findAll(query?: SortQuery): Promise<T[]> {
     const qb = this.getQB()
     this.joinQB(qb, query?.joins)
-    this.sortQB(qb, query.sort)
+    this.sortQB(qb, query?.sort)
     return qb.getMany()
   }
 
