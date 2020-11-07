@@ -8,9 +8,15 @@ import { RoleModule } from './role/role.module'
 import { RoleEntity } from './role/role.entiry'
 import { FileModule } from './file/file.module'
 import { FileEntity } from './file/file.entity'
+import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path'
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public')
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -24,7 +30,8 @@ import { FileEntity } from './file/file.entity'
     }),
     UserModule,
     RoleModule,
-    FileModule
+    FileModule,
+    // AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

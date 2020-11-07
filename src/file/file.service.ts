@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
-import { createWriteStream, createReadStream, existsSync, mkdirSync } from 'fs'
+import { createWriteStream, createReadStream, existsSync, mkdirSync, statSync, ReadStream } from 'fs'
 import { join } from 'path'
 import { BaseService } from 'src/base/base.service'
 import { Repository } from 'typeorm'
@@ -52,7 +52,7 @@ export class FileService extends BaseService<FileEntity> {
     return res
   }
 
-  async getImageBuffer(id: string, w: number | undefined, h: number | undefined): Promise<Readable> {
+  async getImage(id: string, w: number | undefined, h: number | undefined): Promise<Readable> {
     const file = await this.findById(id)
     if (!FileService.imageExts.has(file.ext)) {
       throw new HttpException('Image does not exist.', HttpStatus.NOT_FOUND)
@@ -70,7 +70,16 @@ export class FileService extends BaseService<FileEntity> {
     return stream
   }
 
-  async getFileBuffer(file: FileEntity): Promise<Readable> {
+  async getMedia(file: FileEntity, start: number, end: number): Promise<ReadStream> {
+    const filePath = FileService.getFilePath(file)
+    if(start >= file.size) {
+      throw new HttpException(`Requested range not satisfiable\n${start} >= ${file.size}`, HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE)
+    }
+    const chunk = createReadStream(filePath, { start, end })
+    return chunk
+  }
+
+  async getFile(file: FileEntity): Promise<ReadStream> {
     const filePath = FileService.getFilePath(file)
     return createReadStream(filePath)
   }

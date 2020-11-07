@@ -19,7 +19,7 @@ export class UserEntity extends BaseEntiry {
   @Column({ nullable: true })
   name: string
 
-  @Column({ nullable: true, enum: Gender })
+  @Column({ nullable: true, type: 'enum', enum: Gender })
   gender: Gender
 
   @Column({ type: 'timestamp', nullable: true })

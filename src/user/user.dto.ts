@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsBoolean, IsDate, IsInt, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator'
+import { IsBoolean, IsDate, IsInt, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from 'class-validator'
 import { PageQuery } from 'src/base/base.dto'
 
 export class UserQuery extends PageQuery {
@@ -66,6 +66,12 @@ export class UpdateUserDto {
   @IsOptional()
   @IsInt()
   readonly roleId?: number
+  
+
+  @ApiProperty({ description: '头像文件ID', required: false })
+  @IsOptional()
+  @IsUUID()
+  readonly avatarId?: string
 }
 
 export class CreateUserDto {
