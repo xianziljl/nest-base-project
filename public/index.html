@@ -4,11 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
 </head>
 <body>
-  <!-- <img src="./1.jpg" alt=""> -->
-  HELLO WORLD!333111
-  <!-- <video style="margin: auto;" controls src="/file/media/db7805ad-605f-4eb7-aeb5-2c365044aa58" autoplay></video> -->
-  <!-- <a href="http://localhost:3000/file/download/804ea25f-1361-468d-bbe7-999c2c87cfac" target="blank">下载</a> -->
+  file upload test! <br>
+  <input type="file" multiple placeholder="选择文件">
+  <button id="submit">submit</button><br>
+  <div id="pct"></div>
+  <script>
+    let files = []
+    document.querySelector('input').addEventListener('change', e => {
+      files = e.target.files
+    })
+    document.querySelector('#submit').addEventListener('click', e => {
+      if (!files.length) return
+      for (let f of files) {
+        const fd = new FormData()
+        fd.append('file', f)
+        fd.append('tag', 'multi_test')
+
+        const config = {
+          timeout: Infinity,
+          onUploadProgress: progressEvent => {
+            const percent = (progressEvent.loaded / progressEvent.total * 100 | 0)
+            let el = document.createElement('div')
+            el.innerText = f.name + '-------' + percent + '%'
+            document.querySelector('#pct').appendChild(el)
+          }
+        }
+        axios.post('/api/files', fd, config).then(res => {
+          console.log(res)
+        }).catch(e => {
+          console.log(e)
+        })
+      }
+    })
+  </script>
 </body>
 </html>

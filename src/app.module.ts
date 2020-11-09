@@ -9,7 +9,7 @@ import { RoleModule } from './role/role.module'
 import { RoleEntity } from './role/role.entiry'
 import { FileModule } from './file/file.module'
 import { FileEntity } from './file/file.entity'
-// import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
@@ -29,10 +29,10 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       synchronize: true,
       retryAttempts: 2
     }),
+    AuthModule,
     UserModule,
     RoleModule,
-    FileModule,
-    // AuthModule
+    FileModule
   ],
   controllers: [AppController],
   providers: [AppService],

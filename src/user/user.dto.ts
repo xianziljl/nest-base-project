@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsBoolean, IsDate, IsInt, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from 'class-validator'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { IsBoolean, IsDate, IsInt, IsOptional, IsString, IsUUID, Length } from 'class-validator'
 import { PageQuery } from 'src/base/base.dto'
 
 export class UserQuery extends PageQuery {
@@ -20,27 +20,12 @@ export class UserQuery extends PageQuery {
   roleId?: string
 }
 
-export class LoginDto {
-  @IsNotEmpty()
-  readonly username: string
-
-  @IsNotEmpty()
-  readonly password: string
-
-  @IsNotEmpty()
-  readonly code: string
-}
-
 export class UpdateUserDto {
   @ApiProperty({ description: 'ID' })
   @IsInt()
   readonly id: number
 
-  @ApiProperty({ description: '密码' })
-  @IsOptional()
-  readonly password: string
-
-  @ApiProperty({ description: '姓名', required: false })
+  @ApiPropertyOptional({ description: '姓名' })
   @IsOptional()
   @IsString()
   @Length(3, 15)
@@ -72,15 +57,4 @@ export class UpdateUserDto {
   @IsOptional()
   @IsUUID()
   readonly avatarId?: string
-}
-
-export class CreateUserDto {
-  @ApiProperty({ description: '用户名' })
-  @IsNotEmpty()
-  @Length(3, 15)
-  readonly username: string
-
-  @ApiProperty({ description: '密码' })
-  @IsNotEmpty()
-  readonly password: string
 }

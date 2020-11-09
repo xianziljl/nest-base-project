@@ -14,4 +14,20 @@ export class AuthService {
     if (user.password !== password) return null
     return user
   }
+
+  async login(): Promise<UserEntity> {
+    return null
+  }
+
+  async register(): Promise<UserEntity> {
+    return null
+  }
+
+  async changePassword() {
+    return null
+  }
+
+  async logout() {
+    return null
+  }
 }

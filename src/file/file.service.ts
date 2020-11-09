@@ -47,9 +47,10 @@ export class FileService extends BaseService<FileEntity> {
       if (!existsSync(dirPath)) mkdirSync(dirPath, { recursive: true })
 
       const realPath = join(dirPath, `${f.id}.${fileData.ext}`)
-      const whiteImage = createWriteStream(realPath)
-      whiteImage.write(file.buffer)
-
+      const wstream = createWriteStream(realPath)
+      wstream.write(file.buffer)
+      wstream.end()
+    
       res.push(f)
     }
     return res
@@ -69,7 +70,7 @@ export class FileService extends BaseService<FileEntity> {
     if (existsSync(cachePath)) return createReadStream(cachePath)
 
     const img = sharp(filePath).resize(w, h, { fit: 'cover' })
-    if (!existsSync(FileService.cacheDir)) mkdirSync(FileService.cacheDir)
+    if (!existsSync(FileService.cacheDir)) mkdirSync(FileService.cacheDir, { recursive: true })
     await img.toFile(cachePath)
     return createReadStream(cachePath)
   }

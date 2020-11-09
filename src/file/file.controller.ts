@@ -51,7 +51,6 @@ export class FileController {
     stream.pipe(res)
   }
   
-
   @Get('file/download/:id')
   async getFile(@Res() res, @Param('id') id: string) {
     const file = await this.fileService.findById(id)
@@ -73,7 +72,6 @@ export class FileController {
     limits: { fileSize: 1024 * 1024 * 1024 }
   }))
   uploadFiles(@UploadedFiles() files, @Body('tag') tag: string): Promise<FileEntity[]> {
-    // console.log('start upload')
     return this.fileService.uploadFiles(files, tag)
   }
 
