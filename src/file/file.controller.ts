@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Header, Headers, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express/multer/interceptors/files.interceptor'
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { BaseQuery, PageResult } from 'src/base/base.dto'
@@ -6,6 +6,7 @@ import { ReadStream } from 'fs'
 import { FileQuery, ImageQuery, UploadFileDto } from './file.dto'
 import { FileEntity } from './file.entity'
 import { FileService } from './file.service'
+import { Response } from 'express'
 // import { diskStorage } from 'multer'
 
 @ApiTags('文件')
@@ -18,17 +19,16 @@ export class FileController {
     return this.fileService.filterSortPage(query)
   }
 
-  @Header('Content-Type', 'image/jpeg,image/png,image/jpg,image/gif')
   @Get('file/image/:id')
-  async getImage(@Res() res, @Param('id') id: string, @Query() query: ImageQuery) {
+  async getImage(@Res() res: Response, @Param('id') id: string, @Query() query: ImageQuery) {
     const file = await this.fileService.findById(id)
     const w = ~~query.w || undefined
     const h = ~~query.h || undefined
     const stream = await this.fileService.getImage(file, w, h)
+    res.setHeader('Content-Type', 'image/jpeg,image/png,image/jpg,image/gif')
     stream.pipe(res)
   }
 
-  @Header('Content-Type', 'video/mp4,video/mpeg4,video/webm,audio/mpeg,audio/ogg')
   @Get('file/media/:id')
   async getMedia(@Headers('range') range, @Res() res, @Param('id') id: string) {
     const file = await this.fileService.findById(id)
@@ -41,7 +41,8 @@ export class FileController {
       const head = {
         'Content-Range': `bytes ${start}-${end}/${file.size}`,
         'Accept-Ranges': 'bytes',
-        'Content-Length': (end - start) + 1
+        'Content-Length': (end - start) + 1,
+        'Content-Type': 'video/mp4,video/mpeg4,video/webm,audio/mpeg,audio/ogg'
       }
       res.writeHead(HttpStatus.PARTIAL_CONTENT, head)
     } else {

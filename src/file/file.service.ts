@@ -6,7 +6,6 @@ import { BaseService } from 'src/base/base.service'
 import { Repository } from 'typeorm'
 import { FileEntity } from './file.entity'
 import * as sharp from 'sharp'
-import { Readable } from 'stream'
 
 @Injectable()
 export class FileService extends BaseService<FileEntity> {
@@ -15,10 +14,14 @@ export class FileService extends BaseService<FileEntity> {
     this.repository = this.fileRepository
   }
 
+  static uploadDir = join(__dirname, '..', '..', 'upload_files')
+
+  static cacheDir = join(FileService.uploadDir, '__cache')
+
   static imageExts = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif', 'tiff'])
 
-  static getFilePath(file) {
-    return join(__dirname, '../../', file.path, `${file.id}.${file.ext}`)
+  static getFilePath(file: FileEntity) {
+    return join(FileService.uploadDir, file.path, `${file.id}.${file.ext}`)
   }
 
   async uploadFiles(files: any[], tag: string): Promise<FileEntity[]> {
@@ -29,7 +32,7 @@ export class FileService extends BaseService<FileEntity> {
       const year = now.getFullYear()
       const month = now.getMonth() + 1
       // const date = now.getDate()
-      const _path = join('upload', _tag, year.toString(), month.toString())
+      const _path = join(_tag, year.toString(), month.toString())
       const fileData = {
         name: file.originalname,
         size: file.size,
@@ -40,7 +43,7 @@ export class FileService extends BaseService<FileEntity> {
       }
       const f = await this.createOrUpdate(fileData)
 
-      const dirPath = join(__dirname, '../../',  _path)
+      const dirPath = join(FileService.uploadDir,  _path)
       if (!existsSync(dirPath)) mkdirSync(dirPath, { recursive: true })
 
       const realPath = join(dirPath, `${f.id}.${fileData.ext}`)
@@ -52,7 +55,7 @@ export class FileService extends BaseService<FileEntity> {
     return res
   }
 
-  async getImage(file: FileEntity, w: number | undefined, h: number | undefined): Promise<Readable> {
+  async getImage(file: FileEntity, w: number | undefined, h: number | undefined): Promise<ReadStream> {
     if (!file) throw new NotFoundException()
     if (!FileService.imageExts.has(file.ext)) throw new UnsupportedMediaTypeException()
 
@@ -60,12 +63,15 @@ export class FileService extends BaseService<FileEntity> {
 
     if (!w && !h) return createReadStream(filePath)
 
-    const img = sharp(filePath)
-    const buffer = await img.resize(w, h, { fit: 'cover' }).jpeg().toBuffer()
-    const stream = new Readable()
-    stream.push(buffer)
-    stream.push(null)
-    return stream
+    const cacheName = `${file.id}.${w || ''}x${h || ''}.jpg`
+    const cachePath = join(FileService.cacheDir, cacheName)
+
+    if (existsSync(cachePath)) return createReadStream(cachePath)
+
+    const img = sharp(filePath).resize(w, h, { fit: 'cover' })
+    if (!existsSync(FileService.cacheDir)) mkdirSync(FileService.cacheDir)
+    await img.toFile(cachePath)
+    return createReadStream(cachePath)
   }
 
   async getMedia(file: FileEntity, start: number, end: number): Promise<ReadStream> {
