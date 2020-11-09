@@ -64,7 +64,7 @@ export class FileService extends BaseService<FileEntity> {
 
     if (!w && !h) return createReadStream(filePath)
 
-    const cacheName = `${file.id}.${w || ''}x${h || ''}.jpg`
+    const cacheName = `${file.id}_${w || ''}x${h || ''}.jpg`
     const cachePath = join(FileService.cacheDir, cacheName)
 
     if (existsSync(cachePath)) return createReadStream(cachePath)

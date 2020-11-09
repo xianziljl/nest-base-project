@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger'
 import { ChangePwdDto, LoginDto, RegisterDto } from './auth.dto'
 
@@ -15,7 +15,7 @@ export class AuthController {
     return data
   }
 
-  @Post('changePwd')
+  @Put('changePwd')
   changePwd(@Body() data: ChangePwdDto) {
     return data
   }
