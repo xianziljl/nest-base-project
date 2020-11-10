@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException, UnsupportedMediaTypeException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
-import { createWriteStream, createReadStream, existsSync, mkdirSync, ReadStream } from 'fs'
+import { createReadStream, existsSync, mkdirSync, ReadStream } from 'fs'
 import { extname, join, parse } from 'path'
 import { BaseService } from 'src/base/base.service'
 import { Repository } from 'typeorm'
@@ -30,7 +30,7 @@ export class FileService extends BaseService<FileEntity> {
     const year = now.getFullYear() + ''
     const month = now.getMonth() + 1 + ''
     const dir = join(FileService.uploadDir, tag, year, month)
-    if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
+    mkdirSync(dir, { recursive: true })
     return dir
   }
 
@@ -72,7 +72,7 @@ export class FileService extends BaseService<FileEntity> {
     if (existsSync(cachePath)) return createReadStream(cachePath)
 
     const img = sharp(filePath).resize(w, h, { fit: 'cover' })
-    if (!existsSync(FileService.cacheDir)) mkdirSync(FileService.cacheDir, { recursive: true })
+    mkdirSync(FileService.cacheDir, { recursive: true })
     await img.toFile(cachePath)
     return createReadStream(cachePath)
   }

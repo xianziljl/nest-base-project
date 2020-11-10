@@ -30,8 +30,12 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() data: RegisterDto) {
-    console.log(data)
-    return data
+    const { username } = data
+    const user = await this.userService.findOne({ username })
+    if (user) {
+      return 'Username already exist.'
+    }
+    return await this.userService.create(data)
   }
 
   @Auth()
