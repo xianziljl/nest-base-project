@@ -9,7 +9,6 @@ import { FileService } from './file.service'
 import { Request, Response } from 'express'
 import { diskStorage } from 'multer'
 import { v4 as uuidv4 } from 'uuid'
-// import { join } from 'path'
 
 @ApiTags('文件')
 @Controller()
@@ -71,6 +70,9 @@ export class FileController {
   @ApiBody({ description: '文件上传', type: UploadFileDto })
   @Post('files')
   @UseInterceptors(FilesInterceptor('files', 10, {
+    limits: {
+      fileSize: 1024 * 1024 * 1024 * 2 // 2GB
+    },
     storage: diskStorage({
       destination (req: Request, file: any, cb: any) {
         cb(null, FileService.getFileDir(file, req.body.tag))
