@@ -14,4 +14,12 @@ export class UserService extends BaseService<UserEntity> {
   async findMe(): Promise<UserEntity> {
     return null
   }
+
+  async getFull(query: any = {}): Promise<UserEntity> {
+    const qb = this.getQB()
+    this.joinQB(qb, 'role')
+    qb.addSelect('user.password')
+    this.filterQB(qb, query)
+    return qb.getOne()
+  } 
 }

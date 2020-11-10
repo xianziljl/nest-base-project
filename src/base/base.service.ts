@@ -8,7 +8,7 @@ export class BaseService<T> {
   repository: Repository<T>
 
   static strToArr(str?: string): string[] {
-    return str?.split(',').filter(a => a)
+    return str?.toString().split(',').filter(a => a)
   }
 
   get tableName(): string {
@@ -36,7 +36,7 @@ export class BaseService<T> {
     return qb
   }
   // 字段筛选 ?name=name1,name2,NULL
-  filterQB(qb: SelectQueryBuilder<T>, query: FilterQuery = {}): SelectQueryBuilder<T> {
+  filterQB(qb: SelectQueryBuilder<T>, query: any): SelectQueryBuilder<T> {
     const { tableName, repositoryFields } = this
     for (const key in query) {
       if (repositoryFields.has(key)) {
@@ -118,7 +118,7 @@ export class BaseService<T> {
     return qb.getOne()
   }
   // 适用于根据条件查找单个用于比较是否有重复
-  async findOne(query: FilterQuery): Promise<T> {
+  async findOne(query: any): Promise<T> {
     const qb = this.getQB()
     this.joinQB(qb, query.joins)
     qb.where(query as Partial<T>)

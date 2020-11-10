@@ -23,7 +23,11 @@ export class RegisterDto {
 }
 
 export class ChangePwdDto {
-  @ApiProperty({ required: true, description: '密码' })
+  @ApiProperty({ required: true, description: '旧密码' })
   @IsNotEmpty()
   password: string
+
+  @ApiProperty({ required: true, description: '新密码' })
+  @IsNotEmpty()
+  newPassword: string
 }

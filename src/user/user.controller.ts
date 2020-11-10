@@ -1,11 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Put, Query } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger'
+import { Auth } from 'src/auth/auth.decorator'
 import { BaseQuery, PageResult } from 'src/base/base.dto'
 import { UpdateUserDto, UserQuery } from './user.dto'
 import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
 
 @ApiTags('用户')
+@Auth()
 @Controller()
 export class UserController {
   constructor(private userService: UserService) {}

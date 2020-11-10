@@ -9,12 +9,14 @@ import { FileService } from './file.service'
 import { Request, Response } from 'express'
 import { diskStorage } from 'multer'
 import { v4 as uuidv4 } from 'uuid'
+import { Auth } from 'src/auth/auth.decorator'
 
 @ApiTags('文件')
 @Controller()
 export class FileController {
   constructor(private fileService: FileService){}
 
+  @Auth()
   @Get('files')
   getList(@Query() query: FileQuery): Promise<PageResult<FileEntity>> {
     return this.fileService.filterSortPage(query)
@@ -61,6 +63,7 @@ export class FileController {
     stream.pipe(res)
   }
 
+  @Auth()
   @Get('file/:id')
   async getFileInfo(@Param('id') id: string, @Query() query: BaseQuery): Promise<FileEntity> {
     return this.fileService.findById(id, query)
@@ -68,6 +71,7 @@ export class FileController {
 
   @ApiConsumes('multipart/form-data')
   @ApiBody({ description: '文件上传', type: UploadFileDto })
+  @Auth()
   @Post('files')
   @UseInterceptors(FilesInterceptor('files', 10, {
     limits: {
@@ -86,6 +90,7 @@ export class FileController {
     return this.fileService.uploadFiles(files, tag)
   }
 
+  @Auth()
   @Delete('file/:ids')
   async delete(@Param('ids') ids: string): Promise<string> {
     await this.fileService.delete(ids)

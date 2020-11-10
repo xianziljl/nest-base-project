@@ -14,16 +14,14 @@ async function bootstrap() {
     .setTitle('Nest test example.')
     .setDescription('The nestjs test API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
-  const document = SwaggerModule.createDocument(app, options, {
-    ignoreGlobalPrefix: false
-  });
+  const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
-  app.useGlobalFilters(new AllExceptionFilter())
+  // app.useGlobalFilters(new AllExceptionFilter())
   // app.useGlobalInterceptors(new TransformInterceptor());
-
   await app.listen(3000);
 }
 bootstrap();

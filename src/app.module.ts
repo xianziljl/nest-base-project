@@ -11,6 +11,8 @@ import { FileModule } from './file/file.module'
 import { FileEntity } from './file/file.entity'
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+// import { APP_GUARD } from '@nestjs/core'
+// import { RolesGuard } from './shared/roles.guard'
 
 @Module({
   imports: [
@@ -35,6 +37,12 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     FileModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: RolesGuard
+    // }
+  ],
 })
 export class AppModule {}

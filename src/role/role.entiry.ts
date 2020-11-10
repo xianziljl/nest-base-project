@@ -5,4 +5,7 @@ import { Column, Entity } from 'typeorm'
 export class RoleEntity extends BaseEntiry {
   @Column('varchar')
   name: string
+
+  @Column()
+  description: string
 }
