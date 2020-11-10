@@ -17,11 +17,11 @@ export class FileQuery extends PageQuery {
 }
 
 export class UploadFileDto {
-  @ApiProperty({ type: 'string', format: 'binary' })
-  files: any[]
-
   @ApiProperty({ required: false })
   tag?: string
+
+  @ApiProperty({ type: 'string', format: 'binary' })
+  files: any[]
 }
 
 export class ImageQuery {

@@ -1,9 +1,9 @@
 import { UserEntity } from 'src/user/user.entity'
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity('file')
 export class FileEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('uuid')
   id: string
 
   @CreateDateColumn()
@@ -29,7 +29,7 @@ export class FileEntity {
 
   @Column({ nullable: true })
   createrId: number
-  // creater
+
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'createrId' })
   creater: UserEntity

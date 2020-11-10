@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException, UnsupportedMediaTypeException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
 import { createWriteStream, createReadStream, existsSync, mkdirSync, ReadStream } from 'fs'
-import { join } from 'path'
+import { extname, join, parse } from 'path'
 import { BaseService } from 'src/base/base.service'
 import { Repository } from 'typeorm'
 import { FileEntity } from './file.entity'
@@ -20,37 +20,39 @@ export class FileService extends BaseService<FileEntity> {
 
   static imageExts = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif', 'tiff'])
 
+  // 根据数据库文件信息获取文件实际路径
   static getFilePath(file: FileEntity) {
     return join(FileService.uploadDir, file.path, `${file.id}.${file.ext}`)
+  }
+  // 根据上传文件信息获取文件应存储的文件夹
+  static getFileDir(file: any, tag = 'default') {
+    const now = new Date()
+    const year = now.getFullYear() + ''
+    const month = now.getMonth() + 1 + ''
+    const dir = join(FileService.uploadDir, tag, year, month)
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
+    return dir
+  }
+
+  static getFileExt(filename: any = '') {
+    return extname(filename).substr(1)
   }
 
   async uploadFiles(files: any[], tag: string): Promise<FileEntity[]> {
     const _tag = tag || 'default'
     const res: FileEntity[] = []
     for (const file of files) {
-      const now = new Date()
-      const year = now.getFullYear()
-      const month = now.getMonth() + 1
-      // const date = now.getDate()
-      const _path = join(_tag, year.toString(), month.toString())
+      const fileInfo = parse(file.path)
       const fileData = {
+        id: fileInfo.name,
         name: file.originalname,
         size: file.size,
-        path: _path,
+        path: fileInfo.dir.replace(FileService.uploadDir, ''),
         tag: _tag,
-        ext: file.originalname.match(/\.\w+$/)?.[0].substr(1),
+        ext: FileService.getFileExt(file.originalname),
         createrId: 1
       }
-      const f = await this.createOrUpdate(fileData)
-
-      const dirPath = join(FileService.uploadDir,  _path)
-      if (!existsSync(dirPath)) mkdirSync(dirPath, { recursive: true })
-
-      const realPath = join(dirPath, `${f.id}.${fileData.ext}`)
-      const wstream = createWriteStream(realPath)
-      wstream.write(file.buffer)
-      wstream.end()
-    
+      const f = await this.create(fileData)
       res.push(f)
     }
     return res

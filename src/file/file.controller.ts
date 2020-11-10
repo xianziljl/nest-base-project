@@ -6,8 +6,10 @@ import { ReadStream } from 'fs'
 import { FileQuery, ImageQuery, UploadFileDto } from './file.dto'
 import { FileEntity } from './file.entity'
 import { FileService } from './file.service'
-import { Response } from 'express'
-// import { diskStorage } from 'multer'
+import { Request, Response } from 'express'
+import { diskStorage } from 'multer'
+import { v4 as uuidv4 } from 'uuid'
+// import { join } from 'path'
 
 @ApiTags('文件')
 @Controller()
@@ -69,7 +71,14 @@ export class FileController {
   @ApiBody({ description: '文件上传', type: UploadFileDto })
   @Post('files')
   @UseInterceptors(FilesInterceptor('files', 10, {
-    limits: { fileSize: 1024 * 1024 * 1024 }
+    storage: diskStorage({
+      destination (req: Request, file: any, cb: any) {
+        cb(null, FileService.getFileDir(file, req.body.tag))
+      },
+      filename (req: Request, file: any, cb: any) {
+        cb(null, `${uuidv4()}.${FileService.getFileExt(file.originalname)}`)
+      }
+    })
   }))
   uploadFiles(@UploadedFiles() files, @Body('tag') tag: string): Promise<FileEntity[]> {
     return this.fileService.uploadFiles(files, tag)
