@@ -41,7 +41,7 @@ export class AuthController {
     if (user) {
       return { code: -1, message: 'Username already exist.' }
     }
-    return await this.userService.create(data)
+    return await this.userService.createOrUpdate(data)
   }
 
   @Auth()
@@ -51,7 +51,11 @@ export class AuthController {
     if (_user.password !== data.password) {
       return { code: -1, message: 'Password wrong.' }
     }
-    await this.userService.update(user.id, { password: data.newPassword })
+    const userData = {
+      id: user.id,
+      password: data.newPassword
+    }
+    await this.userService.createOrUpdate(userData)
     return 'Success.'
   }
 }

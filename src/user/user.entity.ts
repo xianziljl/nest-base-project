@@ -1,6 +1,6 @@
 import { RoleEntity } from 'src/role/role.entiry'
 import { BaseEntiry } from 'src/base/base.entiry'
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm'
 import { FileEntity } from 'src/file/file.entity'
 
 enum Gender {
@@ -35,10 +35,7 @@ export class UserEntity extends BaseEntiry {
   @JoinColumn({ name: 'avatarId' })
   avatar: FileEntity
 
-  @Column({ nullable: true })
-  roleId: number
-
-  @ManyToOne(() => RoleEntity, { onDelete: 'SET NULL', cascade: true })
-  @JoinColumn({ name: 'roleId' })
-  role: RoleEntity
+  @ManyToMany(() => RoleEntity)
+  @JoinTable()
+  roles: RoleEntity[]
 }

@@ -14,16 +14,13 @@ export class UserQuery extends PageQuery {
   @ApiProperty({ required: false, description: '性别' })
   @IsOptional()
   gender?: string
-
-  @ApiProperty({ required: false, description: '角色ID' })
-  @IsOptional()
-  roleId?: string
 }
 
-export class UpdateUserDto {
-  @ApiProperty({ description: 'ID' })
+export class CreateOrUpdateUserDto {
+  @ApiProperty({ description: 'ID', required: false })
+  @IsOptional()
   @IsInt()
-  readonly id: number
+  readonly id?: number
 
   @ApiPropertyOptional({ description: '姓名' })
   @IsOptional()
@@ -45,16 +42,14 @@ export class UpdateUserDto {
   @IsOptional()
   @IsBoolean()
   readonly blocked?: boolean
-  
 
-  @ApiProperty({ description: '角色ID', required: false })
+  @ApiProperty({ required: false, description: '角色' })
   @IsOptional()
-  @IsInt()
-  readonly roleId?: number
-  
+  roles?: { [id: string]: number }[]
 
   @ApiProperty({ description: '头像文件ID', required: false })
   @IsOptional()
   @IsUUID()
   readonly avatarId?: string
 }
+

@@ -1,5 +1,4 @@
 import { Brackets, DeepPartial, DeleteResult, Repository, SelectQueryBuilder } from 'typeorm'
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 import { BaseQuery, FilterQuery, PageQuery, PageResult, SortQuery } from './base.dto'
 
 const DEFAULT_PAGE_SIZE = 30
@@ -160,23 +159,16 @@ export class BaseService<T> {
     return { page, pageSize, total, list }
   }
 
-  async createOrUpdate(data: { [key: string]: any }): Promise<T> {
-    if (data.id) {
-      const item = await this.repository.findOne(data.id)
-      if (item) return this.update(data.id, data)
+  async createOrUpdate(data: DeepPartial<T>): Promise<T> {
+    let item: T
+    if (data['id']) {
+      item = await this.repository.preload(data)
+      if (!item) item = this.repository.create(data)
+    } else {
+      item = this.repository.create(data)
     }
-    return this.create(data)
-  }
-
-  async create(data: { [key: string]: any }): Promise<T> {
-    const item = this.repository.create(data as DeepPartial<T>)
     await this.repository.save(item)
     return item
-  }
-
-  async update(id: number | string, data: { [key: string]: any }): Promise<T> {
-    await this.repository.update(id, data as QueryDeepPartialEntity<T>)
-    return this.repository.findOne(id)
   }
 
   async delete(ids: string): Promise<DeleteResult> {

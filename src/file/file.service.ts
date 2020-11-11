@@ -52,7 +52,7 @@ export class FileService extends BaseService<FileEntity> {
         ext: FileService.getFileExt(file.originalname),
         createrId: 1
       }
-      const f = await this.create(fileData)
+      const f = await this.createOrUpdate(fileData)
       res.push(f)
     }
     return res

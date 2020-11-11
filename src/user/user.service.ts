@@ -13,7 +13,7 @@ export class UserService extends BaseService<UserEntity> {
 
   async getFull(query: any = {}): Promise<UserEntity> {
     const qb = this.getQB()
-    this.joinQB(qb, 'role')
+    this.joinQB(qb, 'roles')
     qb.addSelect('user.password')
     this.filterQB(qb, query)
     return qb.getOne()
@@ -23,7 +23,7 @@ export class UserService extends BaseService<UserEntity> {
   async findMe(id: string | number): Promise<UserEntity> {
     return await this.userRepository.findOne(id, {
       cache: 60000, // 缓存时间 60s
-      relations: ['role']
+      relations: ['roles']
     })
   }
 }
