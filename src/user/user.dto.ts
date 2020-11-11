@@ -21,6 +21,14 @@ export class CreateOrUpdateUserDto {
   @IsOptional()
   @IsInt()
   readonly id?: number
+  
+  @ApiProperty({ description: 'username', required: false })
+  @IsOptional()
+  readonly username?: string
+
+  @ApiProperty({ description: 'password', required: false })
+  @IsOptional()
+  readonly password?: string
 
   @ApiPropertyOptional({ description: '姓名' })
   @IsOptional()
