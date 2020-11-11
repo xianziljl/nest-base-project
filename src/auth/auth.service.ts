@@ -19,11 +19,9 @@ export class AuthService {
 
   async getToken(user: UserEntity): Promise<any> {
     const payload = { sub: user.id }
-    const now = new Date().getTime()
     return {
       token: this.jwtService.sign(payload),
-      iat: now,
-      exp: now + ms(jwtConstants.expiresIn)
+      exp: new Date().getTime() + ms(jwtConstants.expiresIn)
     }
   }
 
