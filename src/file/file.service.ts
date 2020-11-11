@@ -5,7 +5,7 @@ import { extname, join, parse } from 'path'
 import { BaseService } from 'src/base/base.service'
 import { Repository } from 'typeorm'
 import { FileEntity } from './file.entity'
-import * as sharp from 'sharp'
+import sharp from 'sharp'
 
 @Injectable()
 export class FileService extends BaseService<FileEntity> {
@@ -25,7 +25,7 @@ export class FileService extends BaseService<FileEntity> {
     return join(FileService.uploadDir, file.path, `${file.id}.${file.ext}`)
   }
   // 根据上传文件信息获取文件应存储的文件夹
-  static getFileDir(file: any, tag = 'default') {
+  static getFileDir(tag = 'default') {
     const now = new Date()
     const year = now.getFullYear() + ''
     const month = now.getMonth() + 1 + ''
@@ -34,8 +34,8 @@ export class FileService extends BaseService<FileEntity> {
     return dir
   }
 
-  static getFileExt(filename: any = '') {
-    return extname(filename).substr(1)
+  static getFileExt(filename = '') {
+    return extname(filename).substr(1).toLowerCase()
   }
 
   async uploadFiles(files: any[], tag: string): Promise<FileEntity[]> {

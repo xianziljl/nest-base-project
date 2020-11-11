@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'
 import { UserEntity } from 'src/user/user.entity'
 import { UserService } from 'src/user/user.service'
-
+import { jwtConstants } from './constants'
+import ms from 'ms'
 @Injectable()
 export class AuthService {
   constructor(
@@ -16,13 +17,14 @@ export class AuthService {
     return null
   }
 
-  async login(user: UserEntity): Promise<any> {
-    const payload = {
-      sub: user.id,
-      username: user.username,
-      role: user.role?.name
+  async getToken(user: UserEntity): Promise<any> {
+    const payload = { sub: user.id }
+    const now = new Date().getTime()
+    return {
+      token: this.jwtService.sign(payload),
+      iat: now,
+      exp: now + ms(jwtConstants.expiresIn)
     }
-    return { access_token: this.jwtService.sign(payload) }
   }
 
   // renewal(user: any) {

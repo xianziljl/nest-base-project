@@ -77,7 +77,7 @@ export class FileController {
     },
     storage: diskStorage({
       destination (req: Request, file: any, cb: any) {
-        cb(null, FileService.getFileDir(file, req.body.tag))
+        cb(null, FileService.getFileDir(req.body.tag))
       },
       filename (req: Request, file: any, cb: any) {
         cb(null, `${uuidv4()}.${FileService.getFileExt(file.originalname)}`)

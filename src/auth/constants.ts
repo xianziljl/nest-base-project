@@ -1,3 +1,4 @@
 export const jwtConstants = {
-  secret: 'secretKey',
+  secret: 'hello_jwt_with_jwt.',
+  expiresIn: '30m'
 }

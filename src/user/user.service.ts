@@ -11,15 +11,19 @@ export class UserService extends BaseService<UserEntity> {
     this.repository = this.userRepository
   }
 
-  async findMe(): Promise<UserEntity> {
-    return null
-  }
-
   async getFull(query: any = {}): Promise<UserEntity> {
     const qb = this.getQB()
     this.joinQB(qb, 'role')
     qb.addSelect('user.password')
     this.filterQB(qb, query)
     return qb.getOne()
-  } 
+  }
+
+  // 单纯用于权限模块, 并做缓存处理
+  async findMe(id: string | number): Promise<UserEntity> {
+    return await this.userRepository.findOne(id, {
+      cache: 60000, // 缓存时间 60s
+      relations: ['role']
+    })
+  }
 }
