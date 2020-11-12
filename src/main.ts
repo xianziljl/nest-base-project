@@ -11,7 +11,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api')
   app.use(helmet())
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
-  // app.useGlobalFilters(new AllExceptionFilter())
+  app.useGlobalFilters(new AllExceptionFilter())
   // app.useGlobalInterceptors(new TransformInterceptor());
 
   const options = new DocumentBuilder()
@@ -23,6 +23,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
 
-  await app.listen(3000);
+  await app.listen(3000)
+  // console.log(process.env)
 }
 bootstrap();

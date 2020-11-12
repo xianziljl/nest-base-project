@@ -11,6 +11,8 @@ import { FileModule } from './file/file.module'
 import { FileEntity } from './file/file.entity'
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ConfigModule } from '@nestjs/config'
+import { dbConst } from './constants'
 // import { APP_GUARD } from '@nestjs/core'
 // import { RolesGuard } from './shared/roles.guard'
 
@@ -20,13 +22,14 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       rootPath: join(__dirname, '..', 'public'),
       exclude: ['/api*']
     }),
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '9867534210',
-      database: 'nest_test',
+      host: dbConst.host,
+      port: dbConst.port,
+      username: dbConst.user,
+      password: dbConst.pass,
+      database: dbConst.name,
       entities: [UserEntity, RoleEntity, FileEntity],
       synchronize: true,
       retryAttempts: 2
