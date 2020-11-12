@@ -1,5 +1,5 @@
-import { UserEntity } from 'src/user/user.entity'
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm'
+import { UserEntity } from 'src/modules/user/user.entity'
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 @Entity('file')
 export class FileEntity {

@@ -2,10 +2,11 @@ import { HttpException, HttpStatus, Injectable, NotFoundException, UnsupportedMe
 import { InjectRepository } from '@nestjs/typeorm'
 import { createReadStream, existsSync, mkdirSync, ReadStream } from 'fs'
 import { extname, join, parse } from 'path'
-import { BaseService } from 'src/base/base.service'
+import { BaseService } from 'src/modules/base/base.service'
 import { Repository } from 'typeorm'
 import { FileEntity } from './file.entity'
 import sharp from 'sharp'
+import { fileConst } from 'src/config/constants'
 
 @Injectable()
 export class FileService extends BaseService<FileEntity> {
@@ -14,22 +15,22 @@ export class FileService extends BaseService<FileEntity> {
     this.repository = this.fileRepository
   }
 
-  static uploadDir = join(__dirname, '..', '..', 'upload_files')
+  // static uploadDir = join(__dirname, '..', '..', 'upload_files')
 
-  static cacheDir = join(FileService.uploadDir, '__cache')
+  // static cacheDir = join(FileService.uploadDir, '__cache')
 
   static imageExts = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif', 'tiff'])
 
   // 根据数据库文件信息获取文件实际路径
   static getFilePath(file: FileEntity) {
-    return join(FileService.uploadDir, file.path, `${file.id}.${file.ext}`)
+    return join(fileConst.uploadDir, file.path, `${file.id}.${file.ext}`)
   }
   // 根据上传文件信息获取文件应存储的文件夹
   static getFileDir(tag = 'default') {
     const now = new Date()
     const year = now.getFullYear() + ''
     const month = now.getMonth() + 1 + ''
-    const dir = join(FileService.uploadDir, tag, year, month)
+    const dir = join(fileConst.uploadDir, tag, year, month)
     mkdirSync(dir, { recursive: true })
     return dir
   }
@@ -47,7 +48,7 @@ export class FileService extends BaseService<FileEntity> {
         id: fileInfo.name,
         name: file.originalname,
         size: file.size,
-        path: fileInfo.dir.replace(FileService.uploadDir, ''),
+        path: fileInfo.dir.replace(fileConst.uploadDir, ''),
         tag: _tag,
         ext: FileService.getFileExt(file.originalname),
         createrId: 1
@@ -67,12 +68,12 @@ export class FileService extends BaseService<FileEntity> {
     if (!w && !h) return createReadStream(filePath)
 
     const cacheName = `${file.id}_${w || ''}x${h || ''}.jpg`
-    const cachePath = join(FileService.cacheDir, cacheName)
+    const cachePath = join(fileConst.cacheDir, cacheName)
 
     if (existsSync(cachePath)) return createReadStream(cachePath)
 
     const img = sharp(filePath).resize(w, h, { fit: 'cover' })
-    mkdirSync(FileService.cacheDir, { recursive: true })
+    mkdirSync(fileConst.cacheDir, { recursive: true })
     await img.toFile(cachePath)
     return createReadStream(cachePath)
   }

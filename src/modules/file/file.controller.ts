@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Headers, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express/multer/interceptors/files.interceptor'
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
-import { BaseQuery, PageResult } from 'src/base/base.dto'
+import { BaseQuery, PageResult } from 'src/modules/base/base.dto'
 import { ReadStream } from 'fs'
 import { FileQuery, ImageQuery, UploadFileDto } from './file.dto'
 import { FileEntity } from './file.entity'
@@ -9,6 +9,7 @@ import { FileService } from './file.service'
 import { Request, Response } from 'express'
 import { diskStorage } from 'multer'
 import { v4 as uuidv4 } from 'uuid'
+import { fileConst } from 'src/config/constants'
 // import { Auth } from 'src/auth/auth.decorator'
 
 @ApiTags('文件')
@@ -71,9 +72,9 @@ export class FileController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({ description: '文件上传', type: UploadFileDto })
   @Post('files')
-  @UseInterceptors(FilesInterceptor('files', 10, {
+  @UseInterceptors(FilesInterceptor('files', fileConst.maxCount, {
     limits: {
-      fileSize: 1024 * 1024 * 1024 * 2 // 2GB
+      fileSize: fileConst.fileSize
     },
     storage: diskStorage({
       destination (req: Request, file: any, cb: any) {

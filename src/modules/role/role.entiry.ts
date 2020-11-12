@@ -1,4 +1,4 @@
-import { BaseEntiry } from 'src/base/base.entiry'
+import { BaseEntiry } from 'src/modules/base/base.entiry'
 import { Column, Entity } from 'typeorm'
 
 @Entity('role')

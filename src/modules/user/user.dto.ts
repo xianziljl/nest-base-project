@@ -1,6 +1,6 @@
 import { IsBoolean, IsDate, IsInt, IsOptional, IsString, IsUUID, Length } from 'class-validator'
-import { PageQuery } from 'src/base/base.dto'
-import { RoleEntity } from 'src/role/role.entiry'
+import { PageQuery } from 'src/modules/base/base.dto'
+import { RoleEntity } from 'src/modules/role/role.entiry'
 
 export class UserQuery extends PageQuery {
   @IsOptional()

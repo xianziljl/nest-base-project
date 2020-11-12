@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsOptional } from 'class-validator'
-import { PageQuery } from 'src/base/base.dto'
+import { PageQuery } from 'src/modules/base/base.dto'
 
 export class FileQuery extends PageQuery {
   @IsOptional()

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger'
 // import { Auth } from 'src/auth/auth.decorator'
-import { BaseQuery, PageResult } from 'src/base/base.dto'
+import { BaseQuery, PageResult } from 'src/modules/base/base.dto'
 import { CreateOrUpdateUserDto, UserQuery } from './user.dto'
 import { UserEntity } from './user.entity'
 import { UserService } from './user.service'

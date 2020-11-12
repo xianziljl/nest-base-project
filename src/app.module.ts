@@ -1,18 +1,16 @@
 import { Module } from '@nestjs/common'
 // import { join } from 'path'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { UserModule } from './user/user.module'
-import { UserEntity } from './user/user.entity'
-import { RoleModule } from './role/role.module'
-import { RoleEntity } from './role/role.entiry'
-import { FileModule } from './file/file.module'
-import { FileEntity } from './file/file.entity'
-import { AuthModule } from './auth/auth.module';
+import { UserModule } from './modules/user/user.module'
+import { UserEntity } from './modules/user/user.entity'
+import { RoleModule } from './modules/role/role.module'
+import { RoleEntity } from './modules/role/role.entiry'
+import { FileModule } from './modules/file/file.module'
+import { FileEntity } from './modules/file/file.entity'
+import { AuthModule } from './modules/auth/auth.module'
 // import { ServeStaticModule } from '@nestjs/serve-static';
 // import { ConfigModule } from '@nestjs/config'
-import { dbConst } from './constants'
+import { dbConst } from './config/constants'
 // import { APP_GUARD } from '@nestjs/core'
 // import { RolesGuard } from './shared/roles.guard'
 
@@ -39,9 +37,8 @@ import { dbConst } from './constants'
     RoleModule,
     FileModule
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     // {
     //   provide: APP_GUARD,
     //   useClass: RolesGuard

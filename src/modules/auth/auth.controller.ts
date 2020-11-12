@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger'
-import { UserEntity } from 'src/user/user.entity'
-import { UserService } from 'src/user/user.service'
+import { UserEntity } from 'src/modules/user/user.entity'
+import { UserService } from 'src/modules/user/user.service'
 import { ChangePwdDto, LoginDto, RegisterDto } from './auth.dto'
 import { AuthService } from './auth.service'
-import { User } from '../shared/user.decorator'
-import { Auth } from 'src/auth/auth.decorator'
+import { User } from 'src/common/user.decorator'
+import { Auth } from 'src/modules/auth/auth.decorator'
 
 @ApiTags('认证')
 @Controller('auth')

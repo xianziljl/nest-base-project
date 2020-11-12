@@ -1,7 +1,7 @@
-import { RoleEntity } from 'src/role/role.entiry'
-import { BaseEntiry } from 'src/base/base.entiry'
+import { RoleEntity } from 'src/modules/role/role.entiry'
+import { BaseEntiry } from 'src/modules/base/base.entiry'
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm'
-import { FileEntity } from 'src/file/file.entity'
+import { FileEntity } from 'src/modules/file/file.entity'
 
 enum Gender {
   male = 1,
