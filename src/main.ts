@@ -3,7 +3,7 @@ import { AppModule } from './app.module'
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { ValidationPipe } from '@nestjs/common'
-import { AllExceptionFilter } from './shared/all-exception.filter'
+// import { AllExceptionFilter } from './shared/all-exception.filter'
 import helmet from 'helmet'
 
 async function bootstrap() {
@@ -11,7 +11,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api')
   app.use(helmet())
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
-  app.useGlobalFilters(new AllExceptionFilter())
+  // app.useGlobalFilters(new AllExceptionFilter())
   // app.useGlobalInterceptors(new TransformInterceptor());
 
   const options = new DocumentBuilder()
