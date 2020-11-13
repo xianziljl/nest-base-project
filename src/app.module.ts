@@ -23,6 +23,7 @@ import { dbConst } from './config/constants'
     // ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
+      charset: 'utf8mb4',
       host: dbConst.host,
       port: dbConst.port,
       username: dbConst.user,
