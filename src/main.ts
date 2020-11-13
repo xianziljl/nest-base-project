@@ -4,12 +4,12 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { ValidationPipe } from '@nestjs/common'
 // import { AllExceptionFilter } from './shared/all-exception.filter'
-import helmet from 'helmet'
+// import helmet from 'helmet'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('api')
-  app.use(helmet())
+  // app.use(helmet())
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
   // app.useGlobalFilters(new AllExceptionFilter())
   // app.useGlobalInterceptors(new TransformInterceptor());

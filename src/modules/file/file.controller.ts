@@ -37,6 +37,7 @@ export class FileController {
   async getMedia(@Headers('range') range, @Res() res, @Param('id') id: string) {
     const file = await this.fileService.findById(id)
     let stream: ReadStream
+    const contentType = 'video/mp4,video/mpeg4,video/webm,audio/mpeg,audio/ogg'
     if (range) {
       const parts = range.replace(/bytes=/, '').split('-')
       const start = parseInt(parts[0], 10)
@@ -46,11 +47,12 @@ export class FileController {
         'Content-Range': `bytes ${start}-${end}/${file.size}`,
         'Accept-Ranges': 'bytes',
         'Content-Length': (end - start) + 1,
-        'Content-Type': 'video/mp4,video/mpeg4,video/webm,audio/mpeg,audio/ogg'
+        'Content-Type': contentType
       }
       res.writeHead(HttpStatus.PARTIAL_CONTENT, head)
     } else {
       stream = await this.fileService.getFile(file)
+      res.setHeader('Content-Type', contentType)
     }
     stream.pipe(res)
   }
