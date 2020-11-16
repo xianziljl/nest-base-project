@@ -1,8 +1,8 @@
-import { BaseEntiry } from 'src/modules/base/base.entiry'
+import { BaseEntity } from 'src/modules/base/base.entity'
 import { Column, Entity } from 'typeorm'
 
 @Entity('role')
-export class RoleEntity extends BaseEntiry {
+export class RoleEntity extends BaseEntity {
   @Column('varchar')
   name: string
 

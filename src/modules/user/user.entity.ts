@@ -1,5 +1,5 @@
 import { RoleEntity } from 'src/modules/role/role.entiry'
-import { BaseEntiry } from 'src/modules/base/base.entiry'
+import { BaseEntity } from 'src/modules/base/base.entity'
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm'
 import { FileEntity } from 'src/modules/file/file.entity'
 
@@ -9,7 +9,7 @@ enum Gender {
 }
 
 @Entity('user')
-export class UserEntity extends BaseEntiry {
+export class UserEntity extends BaseEntity {
   @Column({ unique: true, update: false })
   username: string
 
