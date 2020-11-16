@@ -13,6 +13,8 @@ import { AuthModule } from './modules/auth/auth.module'
 import { dbConst } from './config/constants'
 // import { APP_GUARD } from '@nestjs/core'
 // import { RolesGuard } from './shared/roles.guard'
+import { EnumerationModule } from './modules/enumeration/enumeration.module';
+import { EnumerationEntity } from './modules/enumeration/enumeration.entity'
 
 @Module({
   imports: [
@@ -29,14 +31,20 @@ import { dbConst } from './config/constants'
       username: dbConst.user,
       password: dbConst.pass,
       database: dbConst.name,
-      entities: [UserEntity, RoleEntity, FileEntity],
+      entities: [
+        UserEntity,
+        RoleEntity,
+        FileEntity,
+        EnumerationEntity
+      ],
       synchronize: true,
       retryAttempts: 2
     }),
     AuthModule,
     UserModule,
     RoleModule,
-    FileModule
+    FileModule,
+    EnumerationModule
   ],
   controllers: [],
   providers: [
