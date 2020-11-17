@@ -35,7 +35,7 @@ export class UserEntity extends BaseEntity {
   @JoinColumn({ name: 'avatarId' })
   avatar: FileEntity
 
-  @ManyToMany(() => RoleEntity)
+  @ManyToMany(() => RoleEntity, role => role.users)
   @JoinTable()
   roles: RoleEntity[]
 }
