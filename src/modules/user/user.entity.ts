@@ -2,6 +2,7 @@ import { RoleEntity } from 'src/modules/role/role.entiry'
 import { BaseEntity } from 'src/modules/base/base.entity'
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm'
 import { FileEntity } from 'src/modules/file/file.entity'
+import { Exclude } from 'class-transformer'
 
 enum Gender {
   male = 1,
@@ -14,6 +15,7 @@ export class UserEntity extends BaseEntity {
   username: string
 
   @Column({ select: false })
+  @Exclude()
   password: string
 
   @Column({ nullable: true })

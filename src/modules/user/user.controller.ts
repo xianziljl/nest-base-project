@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Query, UseInterceptors } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger'
 // import { Auth } from 'src/auth/auth.decorator'
 import { BaseQuery, PageResult } from 'src/modules/base/base.dto'
@@ -7,6 +7,7 @@ import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
 
 @ApiTags('用户')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller()
 export class UserController {
   constructor(private userService: UserService) {}

@@ -12,7 +12,6 @@ async function bootstrap() {
   app.use(helmet())
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
   // app.useGlobalFilters(new AllExceptionFilter())
-  // app.useGlobalInterceptors(new TransformInterceptor());
 
   const options = new DocumentBuilder()
     .setTitle('Nest test example.')
