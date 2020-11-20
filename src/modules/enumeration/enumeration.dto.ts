@@ -3,11 +3,11 @@ import { FilterQuery } from '../base/base.dto'
 
 export class EnumerationQuery extends FilterQuery {
   @IsOptional()
-  name: string
+  name?: string
 
   @IsOptional()
-  value: string
+  value?: string
 
   @IsOptional()
-  parentId: string
+  parentId?: string
 }
