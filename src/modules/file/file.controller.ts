@@ -13,7 +13,6 @@ import { fileConst } from 'src/config/constants'
 import { User } from 'src/common/user.decorator'
 import { UserOptional } from 'src/common/user-optional.decorator'
 import { UserEntity } from '../user/user.entity'
-// import { Auth } from 'src/auth/auth.decorator'
 
 @ApiTags('文件')
 @Controller()

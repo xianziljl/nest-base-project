@@ -17,10 +17,6 @@ export class FileService extends BaseService<FileEntity> {
     mkdirSync(fileConst.cacheDir, { recursive: true })
   }
 
-  // static uploadDir = join(__dirname, '..', '..', 'upload_files')
-
-  // static cacheDir = join(FileService.uploadDir, '__cache')
-
   static imageExts = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif', 'tiff'])
 
   // 根据数据库文件信息获取文件实际路径
@@ -53,7 +49,7 @@ export class FileService extends BaseService<FileEntity> {
         path: fileInfo.dir.replace(fileConst.uploadDir, ''),
         tag: _tag,
         ext: FileService.getFileExt(file.originalname),
-        createrId: user.id || 1
+        createrId: user?.id || 1
       }
       const f = await this.createOrUpdate(fileData)
       res.push(f)
