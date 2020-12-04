@@ -26,4 +26,7 @@ export class ImageQuery {
 
   @IsOptional()
   h?: string
+
+  @IsOptional()
+  q?: string
 }

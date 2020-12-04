@@ -28,7 +28,8 @@ export class FileController {
     const file = await this.fileService.findById(id)
     const w = ~~query.w || undefined
     const h = ~~query.h || undefined
-    const stream = await this.fileService.getImage(file, w, h)
+    const q = ~~query.q || undefined
+    const stream = await this.fileService.getImage(file, w, h, q)
     res.setHeader('Content-Type', 'image/jpeg,image/png,image/jpg,image/gif')
     stream.pipe(res)
   }

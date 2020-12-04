@@ -13,6 +13,7 @@ export class FileService extends BaseService<FileEntity> {
   constructor(@InjectRepository(FileEntity) private readonly fileRepository: Repository<FileEntity>) {
     super()
     this.repository = this.fileRepository
+    mkdirSync(fileConst.cacheDir, { recursive: true })
   }
 
   // static uploadDir = join(__dirname, '..', '..', 'upload_files')
@@ -59,21 +60,25 @@ export class FileService extends BaseService<FileEntity> {
     return res
   }
 
-  async getImage(file: FileEntity, w: number | undefined, h: number | undefined): Promise<ReadStream> {
+  async getImage(file: FileEntity, w?: number | undefined, h?: number | undefined, q?: number): Promise<ReadStream> {
     if (!file) throw new NotFoundException()
     if (!FileService.imageExts.has(file.ext)) throw new UnsupportedMediaTypeException()
 
     const filePath = FileService.getFilePath(file)
 
-    if (!w && !h) return createReadStream(filePath)
+    if (!w && !h && !q) return createReadStream(filePath)
 
-    const cacheName = `${file.id}_${w || ''}x${h || ''}.jpg`
+    if (q > 100) q = 100
+    else if (q < 10) q = 10
+
+    const cacheName = `${file.id}_${w || ''}x${h || ''}x${q || ''}.jpg`
     const cachePath = join(fileConst.cacheDir, cacheName)
 
     if (existsSync(cachePath)) return createReadStream(cachePath)
 
-    const img = sharp(filePath).resize(w, h, { fit: 'cover' })
-    mkdirSync(fileConst.cacheDir, { recursive: true })
+    const img = sharp(filePath)
+      .resize(w, h, { fit: 'cover' })
+      .jpeg({ progressive: true, quality: q })
     await img.toFile(cachePath)
     return createReadStream(cachePath)
   }
