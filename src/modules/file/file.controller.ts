@@ -10,6 +10,9 @@ import { Request, Response } from 'express'
 import { diskStorage } from 'multer'
 import { v4 as uuidv4 } from 'uuid'
 import { fileConst } from 'src/config/constants'
+import { User } from 'src/common/user.decorator'
+import { UserOptional } from 'src/common/user-optional.decorator'
+import { UserEntity } from '../user/user.entity'
 // import { Auth } from 'src/auth/auth.decorator'
 
 @ApiTags('文件')
@@ -74,6 +77,7 @@ export class FileController {
 
   @ApiConsumes('multipart/form-data')
   @ApiBody({ description: '文件上传', type: UploadFileDto })
+  @UserOptional()
   @Post('files')
   @UseInterceptors(FilesInterceptor('files', fileConst.maxCount, {
     limits: {
@@ -88,8 +92,8 @@ export class FileController {
       }
     })
   }))
-  uploadFiles(@UploadedFiles() files, @Body('tag') tag: string): Promise<FileEntity[]> {
-    return this.fileService.uploadFiles(files, tag)
+  uploadFiles(@User() user: UserEntity, @UploadedFiles() files, @Body('tag') tag: string): Promise<FileEntity[]> {
+    return this.fileService.uploadFiles(files, tag, user)
   }
 
   // @Auth()

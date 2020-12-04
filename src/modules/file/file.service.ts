@@ -7,6 +7,7 @@ import { Repository } from 'typeorm'
 import { FileEntity } from './file.entity'
 import sharp from 'sharp'
 import { fileConst } from 'src/config/constants'
+import { UserEntity } from '../user/user.entity'
 
 @Injectable()
 export class FileService extends BaseService<FileEntity> {
@@ -40,7 +41,7 @@ export class FileService extends BaseService<FileEntity> {
     return extname(filename).substr(1).toLowerCase()
   }
 
-  async uploadFiles(files: any[], tag: string): Promise<FileEntity[]> {
+  async uploadFiles(files: any[], tag: string, user?: UserEntity): Promise<FileEntity[]> {
     const _tag = tag || 'default'
     const res: FileEntity[] = []
     for (const file of files) {
@@ -52,7 +53,7 @@ export class FileService extends BaseService<FileEntity> {
         path: fileInfo.dir.replace(fileConst.uploadDir, ''),
         tag: _tag,
         ext: FileService.getFileExt(file.originalname),
-        createrId: 1
+        createrId: user.id || 1
       }
       const f = await this.createOrUpdate(fileData)
       res.push(f)
