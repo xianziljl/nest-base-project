@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException, UnsupportedMediaTypeException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnsupportedMediaTypeException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { createReadStream, existsSync, mkdirSync, ReadStream } from 'fs'
 import { extname, join, parse } from 'path'
@@ -81,7 +81,7 @@ export class FileService extends BaseService<FileEntity> {
   }
 
   async getMedia(file: FileEntity, start: number, end: number): Promise<ReadStream> {
-    if(start >= file.size) {
+    if (start >= file.size) {
       throw new HttpException(`Requested range not satisfiable\n${start} >= ${file.size}`, HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE)
     }
     const filePath = FileService.getFilePath(file)

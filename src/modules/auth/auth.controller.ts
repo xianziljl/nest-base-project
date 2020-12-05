@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { UserEntity } from 'src/modules/user/user.entity'
 import { UserService } from 'src/modules/user/user.service'
@@ -13,7 +13,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService
-  ) {}
+  ) { }
 
   @Post('token')
   async login(@Body() data: LoginDto) {

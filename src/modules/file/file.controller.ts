@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Headers, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common'
 import { FilesInterceptor } from '@nestjs/platform-express/multer/interceptors/files.interceptor'
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { BaseQuery, PageResult } from 'src/modules/base/base.dto'
@@ -17,7 +17,7 @@ import { UserEntity } from '../user/user.entity'
 @ApiTags('文件')
 @Controller()
 export class FileController {
-  constructor(private fileService: FileService){}
+  constructor(private fileService: FileService) { }
 
   // @Auth()
   @Get('files')
@@ -59,12 +59,12 @@ export class FileController {
     }
     stream.pipe(res)
   }
-  
+
   @Get('file/download/:id')
   async getFile(@Res() res, @Param('id') id: string) {
     const file = await this.fileService.findById(id)
     const stream = await this.fileService.getFile(file)
-    res.setHeader('content-Type','application/octet-stream');
+    res.setHeader('content-Type', 'application/octet-stream')
     res.setHeader('content-Disposition', `attachment;filename=${file.name}`)
     stream.pipe(res)
   }
@@ -83,10 +83,10 @@ export class FileController {
       fileSize: fileConst.fileSize
     },
     storage: diskStorage({
-      destination (req: Request, file: any, cb: any) {
+      destination(req: Request, file: any, cb: any) {
         cb(null, FileService.getFileDir(req.body.tag))
       },
-      filename (req: Request, file: any, cb: any) {
+      filename(req: Request, file: any, cb: any) {
         cb(null, `${uuidv4()}.${FileService.getFileExt(file.originalname)}`)
       }
     })

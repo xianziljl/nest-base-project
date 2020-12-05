@@ -89,7 +89,7 @@ export class BaseService<T> {
     if (searchFields) {
       const arr = BaseService.strToArr(searchFields)
       qb.andWhere(new Brackets(_qb => {
-        arr.forEach(field =>  _qb.orWhere(`${this.tableName}.${field} like :search`, { search: `%${search}%` }))
+        arr.forEach(field => _qb.orWhere(`${this.tableName}.${field} like :search`, { search: `%${search}%` }))
       }))
     }
     return qb
@@ -109,7 +109,7 @@ export class BaseService<T> {
     return qb
   }
 
-  
+
   async findById(id: number | string, query: BaseQuery = {}): Promise<T> {
     const qb = this.getQB()
     this.joinQB(qb, query.joins)
@@ -123,7 +123,7 @@ export class BaseService<T> {
     qb.where(query as Partial<T>)
     return qb.getOne()
   }
-  
+
   async findAll(query?: SortQuery): Promise<T[]> {
     const qb = this.getQB()
     this.joinQB(qb, query?.joins)
@@ -144,7 +144,7 @@ export class BaseService<T> {
   async filterSortPage(query: PageQuery): Promise<PageResult<T>> {
     const page = ~~query.page || 1
     const pageSize = ~~query.pageSize || DEFAULT_PAGE_SIZE
-    
+
     const qb = this.getQB()
     this.joinQB(qb, query.joins)
     this.filterQB(qb, query)

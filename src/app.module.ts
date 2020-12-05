@@ -13,7 +13,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { dbConst } from './config/constants'
 // import { APP_GUARD } from '@nestjs/core'
 // import { RolesGuard } from './shared/roles.guard'
-import { EnumerationModule } from './modules/enumeration/enumeration.module';
+import { EnumerationModule } from './modules/enumeration/enumeration.module'
 import { EnumerationEntity } from './modules/enumeration/enumeration.entity'
 
 @Module({
@@ -52,6 +52,6 @@ import { EnumerationEntity } from './modules/enumeration/enumeration.entity'
     //   provide: APP_GUARD,
     //   useClass: RolesGuard
     // }
-  ],
+  ]
 })
-export class AppModule {}
+export class AppModule { }

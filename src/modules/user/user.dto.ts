@@ -17,7 +17,7 @@ export class CreateOrUpdateUserDto {
   @IsOptional()
   @IsInt()
   readonly id?: number
-  
+
   @IsOptional()
   readonly username?: string
 
